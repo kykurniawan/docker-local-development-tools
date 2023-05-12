@@ -66,12 +66,48 @@ services:
   mailhog:
     container_name: mailhog
     image: mailhog/mailhog:v1.0.1
+    environment:
+      MH_STORAGE: maildir
     ports:
       - "1025:1025"
       - "8025:8025"
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:management-alpine
+    environment:
+      RABBITMQ_DEFAULT_USER: root
+      RABBITMQ_DEFAULT_PASS: root
+    ports:
+      - "8030:15672"
+    volumes:
+      - rabbitmq-volume:/var/lib/rabbitmq
+  nginx:
+    container_name: nginx
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - nginx-volume:/usr/share/nginx/html
+  openldap:
+    container_name: openldap
+    image: bitnami/openldap:2.6.4
+    ports:
+      - "1389:1389"
+      - "1636:1636"
+    environment:
+      LDAP_ADMIN_USERNAME: admin
+      LDAP_ADMIN_PASSWORD: password
+      LDAP_USERS: 'user1,user2'
+      LDAP_PASSWORDS: 'password,password'
+    volumes:
+      - openldap-volume:/bitnami/openldap
 volumes:
   mysql-volume:
   redis-volume:
   mongo-volume:
   minio-volume:
   postgres-volume:
+  rabbitmq-volume:
+  nginx-volume:
+  nginx-conf-volume:
+  openldap-volume:
