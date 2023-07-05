@@ -63,14 +63,14 @@ services:
       PMA_PASSWORD: root
     ports:
       - "8020:80"
-  mailhog:
-    container_name: mailhog
-    image: mailhog/mailhog:v1.0.1
-    environment:
-      MH_STORAGE: maildir
+  mailpit:
+    container_name: mailpit
+    image: axllent/mailpit
     ports:
       - "1025:1025"
       - "8025:8025"
+    volumes:
+      - mailpit-volume:/data
   rabbitmq:
     container_name: rabbitmq
     image: rabbitmq:management-alpine
@@ -79,6 +79,7 @@ services:
       RABBITMQ_DEFAULT_PASS: root
     ports:
       - "8030:15672"
+      - "5672:5672"
     volumes:
       - rabbitmq-volume:/var/lib/rabbitmq
   nginx:
@@ -111,3 +112,4 @@ volumes:
   nginx-volume:
   nginx-conf-volume:
   openldap-volume:
+  mailpit-volume:
